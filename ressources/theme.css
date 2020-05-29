@@ -60,6 +60,10 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
 }
 
+.topman {
+  height: 45px;
+}
+
 .messagebar {
   padding: 5px;
   width: 100%;
@@ -76,6 +80,10 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 .miniman {
   padding-left: 33%;
   padding-right: 33%;
+}
+
+#downman {
+  height: 25px;
 }
 
 body {
@@ -4540,7 +4548,9 @@ input[type="button"].btn-block {
 }
 
 .navbar {
-  position: relative;
+  top: 0px;
+  position: fixed;
+  width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
