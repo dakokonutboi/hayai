@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>hayai</title>
+    <link rel="stylesheet" href="/gui/theme.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="/gui/lib.js"></script>
+    <div style="display: none;" id='invitediv'>
+      <div style="padding: 5px;">
+        <div class="form-group">
+          <fieldset>
+            <label class="control-label" for="readOnlyInput">Link</label>
+            <input id="linkholder" class="form-control" type="text" placeholder="" readonly="">
+            <button type="button" onclick="hideLink()" class="btn btn-info">Hide</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="#">hayai</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="javascript: alert('That is your username.')"><div id='usernamedisplay'></div></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/interface/username">Change username</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/api/exit">Exit this chat</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript: inviteLink()">Invite link</a>
+          </li>
+      </div>
+    </nav>
+    <div class="contentor">
+      <div class="" id="messagesdiv">
+
+      </div>
+      <div id="downman"></div>
+    </div>
+    <div class="messagebar">
+      <div class="form-group">
+        <input autofocus style="width: 85%;" type="text" class="form-control" placeholder="Message" id="messagebox"><button id="sendbutton" style="float: right; width: 15%;" type="button" onclick="sendmessage()" class="btn btn-success">Send</button>
+      </div>
+    </div>
+    <script type="text/javascript">
+    var getJSON = function(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+          var status = xhr.status;
+          if (status === 200) {
+            callback(null, xhr.response);
+          } else {
+            callback(status, xhr.response);
+          }
+        };
+        xhr.send();
+    };
+      var linkholder = document.getElementById('linkholder');
+      var invitediv = document.getElementById('invitediv');
+      var messagesdiv = document.getElementById('messagesdiv');
+      var messagebox = document.getElementById('messagebox');
+      linkholder.value = window.location.href;
+      function inviteLink(){
+        invitediv.style = 'display: inline;';
+        window.location = '#invitediv';
+      }
+      function getmessages(){
+        getJSON('/api/getmessages?room='+encodeURI(getCookie('room')+'&password='+getCookie('room_password')),
+          function(err, data){
+            if(err != null){
+              alert('Something went wrong...');
+            }else{
+              messagesdiv.innerHTML = '';
+              data.messages.forEach(element => {
+                messagesdiv.innerHTML = messagesdiv.innerHTML + '<p>'+element+'</p>';
+              });
+            }
+          }
+        );
+      }
+      function sendmessage(){
+        message = messagebox.value;
+        getJSON('/api/newmessage?content='+encodeURI(message), function(err, data){
+          console.log(data);
+        });
+        messagebox.value = "";
+      }
+      function hideLink(){
+        invitediv.style = 'display: none;';
+      }
+      messagebox.addEventListener("keyup", function(event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+          // Cancel the default action, if needed
+          event.preventDefault();
+          // Trigger the button element with a click
+          document.getElementById("sendbutton").click();
+        }
+      });
+      setInterval(getmessages, 1000);
+      var usernamedisplay = document.getElementById('usernamedisplay');
+      usernamedisplay.innerHTML = getCookie('username').toString().split("<").join("&lt;").split(">").join("&gt;");
+    </script>
+  </body>
+</html>

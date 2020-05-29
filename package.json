@@ -1,0 +1,25 @@
+{
+  "name": "hayai",
+  "version": "1.0.0",
+  "description": "hayai is a volatile chatroom service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dakokonutboi/hayai.git"
+  },
+  "author": "dakokonutboi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dakokonutboi/hayai/issues"
+  },
+  "homepage": "https://github.com/dakokonutboi/hayai#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "uniqid": "^5.2.0"
+  }
+}
